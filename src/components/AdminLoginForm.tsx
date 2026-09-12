@@ -16,20 +16,25 @@ export function AdminLoginForm() {
     setLoading(true);
     setError(null);
 
-    const supabase = createClient();
-    const { error: authError } = await supabase.auth.signInWithPassword({
-      email: "zkrish6789@gmail.com",
-      password,
-    });
+    try {
+      const supabase = createClient();
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email: "zkrish6789@gmail.com",
+        password,
+      });
 
-    if (authError) {
-      setError("Error: " + authError.message);
+      if (authError) {
+        setError("Error: " + authError.message);
+        setLoading(false);
+        return;
+      }
+
+      router.push("/admin");
+      router.refresh();
+    } catch (err) {
+      setError("Unexpected error: " + (err instanceof Error ? err.message : String(err)));
       setLoading(false);
-      return;
     }
-
-    router.push("/admin");
-    router.refresh();
   }
 
   return (
