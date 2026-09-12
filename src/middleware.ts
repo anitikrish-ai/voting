@@ -9,9 +9,6 @@ export async function middleware(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  // If env vars aren't available yet, don't crash every /admin request —
-  // let it through so the page itself can show the "Setup Required" notice
-  // instead of a 500 error.
   if (!supabaseUrl || !supabaseAnonKey) {
     return NextResponse.next({ request });
   }
@@ -33,9 +30,13 @@ export async function middleware(request: NextRequest) {
     },
   });
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user = null;
+  try {
+    const result = await supabase.auth.getUser();
+    user = result.data.user;
+  } catch (err) {
+    console.error("middleware auth check failed:", err);
+  }
 
   if (isAdminRoute && !user) {
     const loginUrl = new URL("/admin/login", request.url);
