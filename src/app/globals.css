@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   FONTS
+
+   Coolvetica Rg.otf and AppleGaramond are commercial faces the brief names
+   directly. Their licenses were not available to verify in this build, so
+   no font binaries are bundled here — shipping one in would risk an
+   unlicensed webfont. Instead:
+
+   1. If you hold a valid webfont license for both, drop the files into
+      /public/fonts using the exact names below and they load automatically —
+      no other code changes needed.
+   2. Until then, the fallback stack (a condensed display face / an oldstyle
+      serif) mimics the same personality: tall condensed type for titles and
+      numbers, a warm serif for supporting copy.
+--------------------------------------------------------------------------- */
+@font-face {
+  font-family: "Coolvetica";
+  src: url("/fonts/Coolvetica Rg.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "AppleGaramond";
+  src: url("/fonts/AppleGaramond-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "AppleGaramond";
+  src: url("/fonts/AppleGaramond.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --ink: #0a0c10;
+  --panel: #12151c;
+  --panel-raised: #181c25;
+  --panel-inset: #0d0f14;
+  --line: #262b35;
+  --line-strong: #383f4d;
+
+  --gold: #c9a961;
+  --gold-bright: #e8c878;
+  --gold-dim: #8a7239;
+
+  --blue-deep: #16324f;
+  --blue-steel: #3d6289;
+  --blue-glow: #6fa3d1;
+
+  --text: #edeef1;
+  --text-dim: #9aa0ac;
+  --text-faint: #676d79;
+
+  --danger: #c1443b;
+  --success: #4c9a6a;
+
+  --font-display: "Coolvetica", "Oswald", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --font-body: "AppleGaramond", "Iowan Old Style", "Book Antiqua", Georgia, serif;
+
+  --ease-standard: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-decel: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-accel: cubic-bezier(0.55, 0, 1, 0.45);
+
+  --dur-instant: 120ms;
+  --dur-fast: 200ms;
+  --dur-base: 320ms;
+  --dur-slow: 560ms;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-panel: var(--panel);
+  --color-panel-raised: var(--panel-raised);
+  --color-line: var(--line);
+  --color-gold: var(--gold);
+  --color-gold-bright: var(--gold-bright);
+  --color-blue-deep: var(--blue-deep);
+  --color-blue-steel: var(--blue-steel);
+  --color-text: var(--text);
+  --color-text-dim: var(--text-dim);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--ink);
+  color-scheme: dark;
+}
+
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 2px;
+}
+
+.grid-texture {
+  background-image: linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  opacity: 0.35;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .backdrop-blur-panel {
+    backdrop-filter: none !important;
+  }
+}
