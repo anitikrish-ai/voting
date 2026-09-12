@@ -820,7 +820,10 @@ Check:
 .env
 .env.local
 .env.production
-service-role keys
+service-ro
+
+
+le keys
 private credentials
 licensed commercial font binaries
 ```
