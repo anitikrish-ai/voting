@@ -867,5 +867,5 @@ Ensure you have appropriate permission to use and redistribute them.
 <br />
 
 Made with ❤️ using Next.js + Supabase
-
+<center>BIGBBB</center>
 </div>
