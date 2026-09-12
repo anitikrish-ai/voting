@@ -2,7 +2,6 @@
 
 import { useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 import { useRealtimeTournament } from "@/hooks/useRealtimeTournament";
 import { RankBadge } from "@/components/RankBadge";
 import { StatusPill } from "@/components/StatusPill";
@@ -17,7 +16,9 @@ export function LeaderboardClient({
   initialStatus: TournamentStatus;
 }) {
   const { players, status } = useRealtimeTournament(initialPlayers, initialStatus);
-  const prevCounts = useRef<Map<string, number>>(new Map(initialPlayers.map((p) => [p.id, p.votes_count])));
+  const prevCounts = useRef<Map<string, number>>(
+    new Map(initialPlayers.map((p) => [p.id, p.votes_count]))
+  );
 
   const ranked = useMemo(
     () => [...players].sort((a, b) => b.votes_count - a.votes_count || a.name.localeCompare(b.name)),
@@ -40,7 +41,8 @@ export function LeaderboardClient({
       <motion.ol layout className="flex flex-col gap-2">
         <AnimatePresence initial={false}>
           {ranked.map((player, index) => {
-            const bumped = (prevCounts.current.get(player.id) ?? player.votes_count) !== player.votes_count;
+            const bumped =
+              (prevCounts.current.get(player.id) ?? player.votes_count) !== player.votes_count;
             prevCounts.current.set(player.id, player.votes_count);
             const pct = totalVotes > 0 ? Math.round((player.votes_count / totalVotes) * 100) : 0;
 
@@ -55,29 +57,37 @@ export function LeaderboardClient({
                   background: "var(--panel)",
                 }}
               >
+                {/* Leader gold left accent */}
+                {index === 0 && (
+                  <span
+                    aria-hidden
+                    className="absolute left-0 top-0 h-full w-0.5"
+                    style={{ background: "var(--gold)" }}
+                  />
+                )}
+
                 <RankBadge rank={index + 1} />
 
-                <div className="relative h-11 w-11 shrink-0 overflow-hidden border sm:h-12 sm:w-12" style={{ borderColor: "var(--line-strong)" }}>
-                  <Image
-                    src={player.image_url || "/players/placeholder.svg"}
-                    alt={player.name}
-                    fill
-                    sizes="48px"
-                    className="object-cover"
-                  />
-                </div>
-
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm sm:text-base" style={{ fontFamily: "var(--font-display)", color: "var(--text)" }}>
+                  <p
+                    className="truncate text-sm sm:text-base"
+                    style={{ fontFamily: "var(--font-display)", color: "var(--text)" }}
+                  >
                     {player.name}
                   </p>
                   <p className="truncate text-xs" style={{ color: "var(--text-dim)" }}>
                     {player.team}
+                    {player.role ? ` · ${player.role}` : ""}
                   </p>
-                  <div className="mt-1.5 h-1 w-full overflow-hidden" style={{ background: "var(--line)" }}>
+                  <div
+                    className="mt-1.5 h-1 w-full overflow-hidden"
+                    style={{ background: "var(--line)" }}
+                  >
                     <motion.div
                       className="h-full"
-                      style={{ background: index === 0 ? "var(--gold)" : "var(--blue-steel)" }}
+                      style={{
+                        background: index === 0 ? "var(--gold)" : "var(--blue-steel)",
+                      }}
                       animate={{ width: `${pct}%` }}
                       transition={{ duration: 0.6, ease: EASE_STANDARD }}
                     />
@@ -90,7 +100,10 @@ export function LeaderboardClient({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, ease: EASE_STANDARD }}
                   className="shrink-0 text-lg tabular-nums sm:text-2xl"
-                  style={{ fontFamily: "var(--font-display)", color: index === 0 ? "var(--gold-bright)" : "var(--text)" }}
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    color: index === 0 ? "var(--gold-bright)" : "var(--text)",
+                  }}
                 >
                   {player.votes_count}
                 </motion.span>
@@ -105,13 +118,22 @@ export function LeaderboardClient({
 
 function StatCard({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
   return (
-    <div className="border px-3 py-3 sm:px-4 sm:py-4" style={{ borderColor: "var(--line-strong)", background: "var(--panel)" }}>
-      <p className="text-[10px] uppercase tracking-[0.1em] sm:text-xs" style={{ color: "var(--text-faint)" }}>
+    <div
+      className="border px-3 py-3 sm:px-4 sm:py-4"
+      style={{ borderColor: "var(--line-strong)", background: "var(--panel)" }}
+    >
+      <p
+        className="text-[10px] uppercase tracking-[0.1em] sm:text-xs"
+        style={{ color: "var(--text-faint)" }}
+      >
         {label}
       </p>
       <p
         className="mt-1 truncate text-lg sm:text-2xl"
-        style={{ fontFamily: "var(--font-display)", color: accent ? "var(--gold-bright)" : "var(--text)" }}
+        style={{
+          fontFamily: "var(--font-display)",
+          color: accent ? "var(--gold-bright)" : "var(--text)",
+        }}
       >
         {value}
       </p>

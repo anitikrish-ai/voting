@@ -60,7 +60,7 @@ export function VotingClient({
   }
 
   async function handleConfirm() {
-    if (!selectedId || phase === "submitting") return; // guards double-click
+    if (!selectedId || phase === "submitting") return; // guard double-click
     setPhase("submitting");
     setErrorMsg(null);
     try {
@@ -89,6 +89,7 @@ export function VotingClient({
 
   const votingDisabled = status !== "open";
 
+  // ── Loading ───────────────────────────────────────────────────────────────
   if (phase === "loading") {
     return (
       <div className="flex min-h-[40vh] items-center justify-center">
@@ -99,6 +100,7 @@ export function VotingClient({
     );
   }
 
+  // ── Vote recorded / already voted ─────────────────────────────────────────
   if (phase === "already_voted" || phase === "done") {
     return (
       <motion.div
@@ -108,30 +110,46 @@ export function VotingClient({
         className="mx-auto max-w-md border px-6 py-10 text-center sm:px-10"
         style={{ borderColor: "var(--line-strong)", background: "var(--panel)" }}
       >
+        {/* Top accent */}
+        <div
+          className="mx-auto mb-6 h-1 w-16"
+          style={{ background: "var(--gold)" }}
+          aria-hidden
+        />
+
         <p
           className="text-xs uppercase tracking-[0.14em]"
           style={{ color: "var(--gold)", fontFamily: "var(--font-display)" }}
         >
           {phase === "done" ? "Vote Recorded" : "Already Voted"}
         </p>
-        {votedPlayer && (
+
+        {votedPlayer ? (
           <>
-            <div className="mx-auto mt-5 h-24 w-24 overflow-hidden border" style={{ borderColor: "var(--line-strong)" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={votedPlayer.image_url || "/players/placeholder.svg"}
-                alt={votedPlayer.name}
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <h2 className="mt-4 text-2xl" style={{ fontFamily: "var(--font-display)", color: "var(--text)" }}>
+            <h2
+              className="mt-4 text-2xl sm:text-3xl"
+              style={{ fontFamily: "var(--font-display)", color: "var(--text)" }}
+            >
               {votedPlayer.name}
             </h2>
-            <p className="text-sm" style={{ color: "var(--text-dim)" }}>
+            <p className="mt-1 text-sm" style={{ color: "var(--blue-glow)", fontFamily: "var(--font-display)" }}>
               {votedPlayer.team}
             </p>
+            {votedPlayer.role && (
+              <p className="text-xs" style={{ color: "var(--text-dim)" }}>
+                {votedPlayer.role}
+              </p>
+            )}
           </>
+        ) : (
+          <h2
+            className="mt-4 text-xl"
+            style={{ fontFamily: "var(--font-display)", color: "var(--text)" }}
+          >
+            Your vote is in
+          </h2>
         )}
+
         <p className="mt-6 text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>
           This device has cast its one vote for the tournament. Follow the live standings on the
           leaderboard.
@@ -152,6 +170,7 @@ export function VotingClient({
     );
   }
 
+  // ── Ballot ────────────────────────────────────────────────────────────────
   return (
     <div className="pb-28 sm:pb-32">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
@@ -164,7 +183,11 @@ export function VotingClient({
       {votingDisabled && (
         <div
           className="mb-6 border px-4 py-3 text-sm"
-          style={{ borderColor: "var(--line-strong)", background: "var(--panel)", color: "var(--text-dim)" }}
+          style={{
+            borderColor: "var(--line-strong)",
+            background: "var(--panel)",
+            color: "var(--text-dim)",
+          }}
         >
           Voting is not currently open for this tournament. Check back soon.
         </div>
@@ -188,6 +211,7 @@ export function VotingClient({
         ))}
       </motion.div>
 
+      {/* Sticky confirm tray */}
       <AnimatePresence>
         {selectedPlayer && (
           <motion.div
@@ -196,16 +220,34 @@ export function VotingClient({
             exit={{ y: 96, opacity: 0 }}
             transition={{ duration: DUR.base, ease: EASE_DECEL }}
             className="fixed inset-x-0 bottom-0 z-30 border-t px-4 py-4 sm:px-8"
-            style={{ borderColor: "var(--line-strong)", background: "rgba(10,12,16,0.96)" }}
+            style={{
+              borderColor: "var(--line-strong)",
+              background: "rgba(10,12,16,0.96)",
+            }}
           >
             <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3">
               <div className="min-w-0">
-                <p className="text-[11px] uppercase tracking-[0.1em]" style={{ color: "var(--text-faint)" }}>
+                <p
+                  className="text-[11px] uppercase tracking-[0.1em]"
+                  style={{ color: "var(--text-faint)" }}
+                >
                   Your selection
                 </p>
-                <p className="truncate text-lg" style={{ fontFamily: "var(--font-display)", color: "var(--gold-bright)" }}>
+                <p
+                  className="truncate text-lg"
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    color: "var(--gold-bright)",
+                  }}
+                >
                   {selectedPlayer.name}
-                  <span className="ml-2 text-sm" style={{ color: "var(--text-dim)", fontFamily: "var(--font-body)" }}>
+                  <span
+                    className="ml-2 text-sm"
+                    style={{
+                      color: "var(--text-dim)",
+                      fontFamily: "var(--font-body)",
+                    }}
+                  >
                     {selectedPlayer.team}
                   </span>
                 </p>
@@ -225,7 +267,11 @@ export function VotingClient({
                   }}
                   disabled={phase === "submitting"}
                   className="border px-4 py-3 text-sm uppercase tracking-[0.06em] disabled:opacity-40"
-                  style={{ borderColor: "var(--line-strong)", color: "var(--text-dim)", fontFamily: "var(--font-display)" }}
+                  style={{
+                    borderColor: "var(--line-strong)",
+                    color: "var(--text-dim)",
+                    fontFamily: "var(--font-display)",
+                  }}
                 >
                   Change
                 </button>
